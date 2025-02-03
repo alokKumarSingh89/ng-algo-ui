@@ -1,1 +1,43 @@
-
+<div class="w-10/12 mx-auto border mt-10 border-gray-200 p-10">
+  <h1 class="font-extrabold! mb-10 text-3xl text-center">Script Config</h1>
+  <ul>
+    @for(script of scripts; track script.name){
+    <li class="grid grid-cols-12 gap-4 justify-center items-center">
+      <mat-form-field class="col-span-3">
+        <mat-label>Script Name</mat-label>
+        <input matInput />
+      </mat-form-field>
+      <mat-form-field class="col-span-3">
+        <mat-label>Expiry Date</mat-label>
+        <input matInput [matDatepicker]="picker" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="col-span-3">
+        <mat-label>No Of Strick</mat-label>
+        <input matInput type="number" />
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <mat-label>Number</mat-label>
+        <input
+          type="text"
+          placeholder="Pick one"
+          aria-label="Number"
+          matInput
+          [formControl]="myControl"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          @for (option of filteredOptions | async; track option) {
+          <mat-option [value]="option">{{ option }}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+    </li>
+    }
+  </ul>
+</div>
