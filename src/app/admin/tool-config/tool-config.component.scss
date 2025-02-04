@@ -1,0 +1,14 @@
+
+@use '@angular/material' as mat;
+.alg-tabs{
+    @include mat.tabs-overrides((
+        label-text-size:  '40px',
+        label-text-weight: 'bold'
+    ));
+
+    
+}
+.mdc-tab__text-label{
+    list-style: 2 !important;
+    font-size: 30px;;
+}

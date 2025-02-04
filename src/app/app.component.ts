@@ -30,7 +30,7 @@ export class AppComponent {
   protected readonly fillerNav: URL[] = [];
   constructor() {
     this.fillerNav.push({ name: 'Home', url: '' });
-    this.fillerNav.push({ name: 'Script Config', url: '/script-config' });
+    this.fillerNav.push({ name: 'Tool Config', url: '/tool-config' });
     console.log(this.fillerNav);
   }
 }

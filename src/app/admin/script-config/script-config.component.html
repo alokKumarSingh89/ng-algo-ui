@@ -1,0 +1,101 @@
+<div class="w-full mx-auto mt-10">
+  <form [formGroup]="scriptConfig">
+    <ul>
+      <li class="grid grid-cols-12">
+        <h2 class="col-span-3">Option Script configure</h2>
+      </li>
+      <li class="grid grid-cols-12 gap-5">
+        <mat-form-field class="col-span-2">
+          <mat-label>Broker Name</mat-label>
+          <mat-select
+            formControlName="broker_name"
+            (valueChange)="loadBrokerData($event)"
+          >
+            @for(item of broker_list; track item){
+            <mat-option [value]="item">{{ item }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="col-span-2">
+          <mat-label>Weekly Express</mat-label>
+          <input matInput formControlName="w_exp" />
+        </mat-form-field>
+        <mat-form-field class="col-span-2">
+          <mat-label>Monthly Express</mat-label>
+          <input matInput formControlName="m_exp" />
+        </mat-form-field>
+        <mat-form-field class="col-span-2">
+          <mat-label>Weekly Month Config(comma seperated)</mat-label>
+          <input matInput formControlName="w_m" />
+        </mat-form-field>
+        <mat-form-field class="col-span-2">
+          <mat-label>Montly Month Config</mat-label>
+          <input matInput formControlName="m_m" />
+        </mat-form-field>
+      </li>
+      <li class="mb-10">
+        <mat-divider></mat-divider>
+      </li>
+      @for(rowControl of rowsControls;let rowIndex = $index; track rowIndex) {
+      <li
+        [formGroup]="getFormGroupAtIndex(rowIndex)"
+        class="grid grid-cols-8 gap-4 justify-center items-center"
+      >
+        @for(control of controlsArray; let ctlIndex = $index; track ctlIndex) {
+        @if(control.type === 'input'||control.type === 'number'){
+        <mat-form-field>
+          <mat-label>{{ control.label }}</mat-label>
+          <input
+            matInput
+            [type]="control.type"
+            [formControlName]="control.name"
+            placeholder="{{ control.placeholder }}"
+          />
+        </mat-form-field>
+        }@else if(control.type === 'date'){
+        <mat-form-field>
+          <mat-label>{{ control.label }}</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [formControlName]="control.name"
+          />
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        }@else if(control.type =="boolean"){
+
+        <mat-slide-toggle [formControlName]="control.name">{{
+          control.label
+        }}</mat-slide-toggle>
+        } }@if(rows.length-1 == rowIndex){
+        <button mat-fab color="primary" (click)="addRow()">
+          <mat-icon>add</mat-icon>
+        </button>
+        }@else{
+        <button mat-fab color="warning" (click)="deleteRow(rowIndex)">
+          <mat-icon>delete</mat-icon>
+        </button>
+        }
+      </li>
+
+      }
+      <li class="grid grid-cols-12">
+        <button
+          mat-fab
+          extended
+          color="primary"
+          class="col-start-10 col-span-2"
+          (click)="submit()"
+        >
+          Submit the form
+        </button>
+      </li>
+    </ul>
+  </form>
+</div>

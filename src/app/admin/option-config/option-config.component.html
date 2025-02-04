@@ -1,0 +1,78 @@
+<div class="mt-10">
+  <ul>
+    <li class="grid grid-cols-12 mb-5"></li>
+    <form [formGroup]="scriptForm">
+      @for(rowControl of rowsControls;let rowIndex = $index; track rowIndex) {
+      <li
+        [formGroup]="getFormGroupAtIndex(rowIndex)"
+        class="grid grid-cols-12 gap-4 justify-center items-center"
+      >
+        @for(control of controlsArray; let ctlIndex = $index; track ctlIndex) {
+        @if(control.type === 'select'){
+        <mat-form-field class="col-span-2">
+          <mat-label>{{ control.label }}</mat-label>
+          <mat-select
+            [formControlName]="control.name"
+            (valueChange)="changeValueHandler(control.name, $event)"
+          >
+            @for(item of getconfig(control); track item.id){
+            <mat-option [value]="item.name">{{ item.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        } @else if (control.type === 'number') {
+        <mat-form-field class="col-span-2">
+          <mat-label>{{ control.label }}</mat-label>
+          <input
+            matInput
+            type="number"
+            [formControlName]="control.name"
+            placeholder="{{ control.placeholder }}"
+          />
+        </mat-form-field>
+        }@else if (control.type === 'date') {
+        <mat-form-field class="col-span-2">
+          <mat-label>{{ control.label }}</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [formControlName]="control.name"
+          />
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        } @else {
+        <mat-form-field class="col-span-2">
+          <mat-label>{{ control.label }}</mat-label>
+          <input matInput [formControlName]="control.name" />
+        </mat-form-field>
+        } } @if(rows.length-1 == rowIndex){
+        <button mat-fab color="primary" (click)="addRow()">
+          <mat-icon>add</mat-icon>
+        </button>
+        }@else{
+        <button mat-fab color="warning" (click)="deleteRow(rowIndex)">
+          <mat-icon>delete</mat-icon>
+        </button>
+        }
+      </li>
+      }
+    </form>
+    <li class="grid grid-cols-12 mb-5">
+      <button
+        mat-fab
+        extended
+        color="primary"
+        class="col-start-10 col-span-2"
+        (click)="submit()"
+        [disabled]="this.rows.length === 0"
+      >
+        Submit the form
+      </button>
+    </li>
+  </ul>
+</div>
