@@ -16,4 +16,9 @@ export class DashboadComponent {
       console.log(data);
     });
   }
+  saveCSV() {
+    this.dashBoardService.saveCSV().subscribe((data) => {
+      console.log(data);
+    });
+  }
 }

@@ -11,4 +11,7 @@ export class DashboadService {
   restartWebSocket() {
     return this.httpClient.get(HOST + '/socket?mode=socket');
   }
+  saveCSV() {
+    return this.httpClient.get(HOST + '/socket/save');
+  }
 }
