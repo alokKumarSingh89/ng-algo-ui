@@ -39,6 +39,7 @@ import { AdminService } from '../admin.service';
 export class OptionConfigComponent implements OnInit {
   scriptForm!: FormGroup;
   adminService: AdminService = inject(AdminService);
+
   controlsArray: IDropDown[] = [
     {
       name: 'broker',
@@ -70,8 +71,8 @@ export class OptionConfigComponent implements OnInit {
     },
     {
       name: 'expiry',
-      placeholder: 'Enter Script Name',
-      type: 'select',
+      placeholder: 'Select Expiry',
+      type: 'date',
       label: 'Expiry',
       key: 'expiry',
     },
@@ -84,7 +85,6 @@ export class OptionConfigComponent implements OnInit {
       { name: 'M', id: 0 },
       { name: 'W', id: 1 },
     ],
-    expiry: [],
   };
 
   constructor(private readonly formBuilder: FormBuilder) {}
@@ -99,7 +99,22 @@ export class OptionConfigComponent implements OnInit {
       }));
       this.configData['brokers'] = broker;
     });
-    this.addRow();
+    this.adminService.get_generated_option().subscribe((data: any) => {
+      if (data.length > 0) {
+        const newList: any = [];
+        data.forEach((el: any) => {
+          newList.push(...Object.values(el));
+        });
+        newList.forEach((el: any) => {
+          if (el) {
+            this.updateRow(el);
+            this.changeValueHandler('broker', el.broker);
+          }
+        });
+      } else {
+        this.addRow();
+      }
+    });
   }
   getconfig(control: IDropDown) {
     if (control.key) {
@@ -111,26 +126,15 @@ export class OptionConfigComponent implements OnInit {
     if (type === 'broker') {
       this.adminService.getScriptConfig(value).subscribe((data: any) => {
         const scriptName: any = [];
-        const expiryList: any = [];
+
         Object.keys(data).forEach((key, index) => {
-          if (key != 'M' && key != 'W') {
-            if (!data[key].expiry_flag) {
-              expiryList.push({
-                name: data[key].expiry,
-                id: index + 1,
-              });
-            }
-            scriptName.push({
-              name: `${data[key].exchange}:${data[key].name}`,
-              id: index + 1,
-            });
+          if (!['M_exp', 'W_exp', 'W_month', 'M_month'].includes(key)) {
+            scriptName.push({ name: key, id: index + 1 });
           }
         });
         this.configData['scriptList'] = scriptName;
-        this.configData['expiry'] = expiryList;
       });
     }
-    // console.log(type, value);
   }
   get rows(): FormArray {
     return this.scriptForm.get('rows') as FormArray;
@@ -144,7 +148,16 @@ export class OptionConfigComponent implements OnInit {
   getFormGroupAtIndex(index: number) {
     return this.rowsControls[index] as FormGroup;
   }
-
+  updateRow(data: any) {
+    let row = this.formBuilder.group({
+      name: [data.name, Validators.required],
+      strick_count: [data.strick_count, Validators.required],
+      broker: [data.broker, Validators.required],
+      expiry_type: [data.expiry_type, Validators.required],
+      expiry: [new Date(data.expiry), Validators.required],
+    });
+    this.rows.push(row);
+  }
   addRow() {
     let row = this.formBuilder.group({
       name: ['', Validators.required],
@@ -156,11 +169,26 @@ export class OptionConfigComponent implements OnInit {
     this.rows.push(row);
   }
   deleteRow(index: number): void {
-    this.rows.removeAt(index);
+    const current_row = this.rows.at(index).value;
+    current_row.expiry = this.adminService.convertDate(current_row.expiry);
+    this.adminService
+      .delete_option(
+        current_row.expiry + '-' + current_row.name,
+        current_row.broker
+      )
+      .subscribe((data) => {
+        this.rows.removeAt(index);
+      });
   }
   submit() {
     if (this.rows.valid) {
-      const formData = this.rows.value;
+      const formData = this.rows.value.map((element: any) => {
+        const expiry = this.adminService.convertDate(element.expiry);
+        return {
+          ...element,
+          expiry,
+        };
+      });
 
       this.adminService.saveScriptConfig(formData).subscribe((data) => {
         console.log(data);

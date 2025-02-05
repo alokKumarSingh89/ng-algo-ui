@@ -40,7 +40,7 @@
       @for(rowControl of rowsControls;let rowIndex = $index; track rowIndex) {
       <li
         [formGroup]="getFormGroupAtIndex(rowIndex)"
-        class="grid grid-cols-8 gap-4 justify-center items-center"
+        class="grid grid-cols-5 gap-4 justify-center items-center"
       >
         @for(control of controlsArray; let ctlIndex = $index; track ctlIndex) {
         @if(control.type === 'input'||control.type === 'number'){

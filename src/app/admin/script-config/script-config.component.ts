@@ -43,7 +43,6 @@ export class ScriptConfigComponent implements OnInit {
   /** all config based on broker
    * 1: Add script
    * 2: Add exhange
-   * 4: add current Expiry
    * 5: add expire flag
    * 5: add strick difference
    * 6: add lots size
@@ -62,19 +61,6 @@ export class ScriptConfigComponent implements OnInit {
       label: 'Script Name',
     },
     {
-      name: 'exchange',
-      placeholder: 'Enter exchange Name',
-      type: 'input',
-      label: 'Exchange Name',
-    },
-    {
-      name: 'expiry',
-      placeholder: 'Enter expiry',
-      type: 'date',
-      label: 'Expiry',
-    },
-
-    {
       name: 'diff',
       placeholder: 'Enter Strick Difference',
       type: 'number',
@@ -91,12 +77,6 @@ export class ScriptConfigComponent implements OnInit {
       placeholder: 'Enter Key Name',
       type: 'input',
       label: 'Script Key',
-    },
-    {
-      name: 'expiry_flag',
-      placeholder: 'Enter expiry',
-      type: 'boolean',
-      label: 'Expired',
     },
   ];
   createForm() {
@@ -128,9 +108,7 @@ export class ScriptConfigComponent implements OnInit {
   addRow() {
     let row = this.formBuilder.group({
       name: ['', Validators.required],
-      exchange: ['', Validators.required],
       expiry: ['', Validators.required],
-      expiry_flag: false,
       diff: [50, Validators.required],
       lots: [70, Validators.required],
       key: ['', Validators.required],
@@ -140,9 +118,6 @@ export class ScriptConfigComponent implements OnInit {
   updateRow(data: any) {
     let row = this.formBuilder.group({
       name: [data.name, Validators.required],
-      exchange: [data.exchange, Validators.required],
-      expiry: [new Date(data.expiry), Validators.required],
-      expiry_flag: data.expiry_flag,
       diff: [data.diff, Validators.required],
       lots: [data.lots, Validators.required],
       key: [data.key, Validators.required],
@@ -157,17 +132,18 @@ export class ScriptConfigComponent implements OnInit {
       this.openSnackBar('Loading Config');
       this.adminService.getScriptConfig(broker).subscribe((data: any) => {
         if (data && Object.keys(data).length > 0) {
+          console.log(data);
           this.createForm();
           this.scriptConfig.patchValue({
             broker_name: broker,
-            m_exp: data['M']['exp'],
-            w_exp: data['W']['exp'],
-            w_m: data['W']['month'],
-            m_m: data['M']['month'],
+            m_exp: data['M_exp'],
+            w_exp: data['W_exp'],
+            w_m: data['W_month'],
+            m_m: data['M_month'],
           });
 
           Object.keys(data).forEach((key) => {
-            if (key != 'M' && key != 'W') {
+            if (!['M_exp', 'W_exp', 'W_month', 'M_month'].includes(key)) {
               this.updateRow(data[key]);
             }
           });
@@ -190,19 +166,6 @@ export class ScriptConfigComponent implements OnInit {
   submit() {
     if (this.scriptConfig.valid) {
       const formValue = this.scriptConfig.value;
-      formValue.rows = formValue.rows.map((element: any) => {
-        const date = new Date(element.expiry);
-        const expiry =
-          date.getFullYear() +
-          '-' +
-          (date.getMonth() + 1) +
-          '-' +
-          date.getDate();
-        return {
-          ...element,
-          expiry,
-        };
-      });
       this.adminService
         .createScriptConfig(this.scriptConfig.value)
         .subscribe((data) => {});

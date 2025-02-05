@@ -23,4 +23,20 @@ export class AdminService {
   loadBroker() {
     return this.http.get(this.host + '/broker_list');
   }
+  get_generated_option() {
+    return this.http.get(this.host);
+  }
+  delete_option(option: string, broker: string) {
+    return this.http.delete(`${this.host}/${option}?broker=${broker}`);
+  }
+  convertDate(date: string) {
+    const current_date = new Date(date);
+    const expiry =
+      current_date.getFullYear() +
+      '-' +
+      (current_date.getMonth() + 1) +
+      '-' +
+      current_date.getDate();
+    return expiry;
+  }
 }
