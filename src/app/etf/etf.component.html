@@ -1,0 +1,86 @@
+<div class="w-11/12 mx-auto mt-10">
+  <h2 class="text-2xl text-gray-600">ETF Ki Dukan</h2>
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-3">
+      <mat-form-field class="w-full">
+        <mat-label>ETF Name</mat-label>
+        <input matInput [(ngModel)]="etf" placeholder="Enter Etf Name" />
+      </mat-form-field>
+    </div>
+    <div class="col-span-2">
+      <button extended="" mat-fab color="primary" (click)="addScript()">
+        <mat-icon>add</mat-icon>
+        Save
+      </button>
+    </div>
+  </div>
+  <div>
+    <mat-tab-group preserveContent animationDuration="1000ms">
+      <mat-tab label="TOP 10 list for today" class="text-2xl">
+        <ul class="shadow-lg p-2 mt-5">
+          <li class="grid grid-cols-8 mb-3">
+            <span class="font-bold text-gray-700 uppercase">Script</span>
+            <span class="font-bold text-gray-700 uppercase">Current Price</span>
+            <span class="font-bold text-gray-700 uppercase">5DMA</span>
+            <span class="font-bold text-gray-700 uppercase">20DMA</span>
+            <!-- <span>50DMA</span>
+            <span>100DMA</span>
+            <span>200DMA</span> -->
+            <!-- <span class="font-bold text-gray-700 uppercase">52_high</span>
+            <span class="font-bold text-gray-700 uppercase">date_high</span> -->
+            <span class="font-bold text-gray-700 uppercase">52_low</span>
+            <span class="font-bold text-gray-700 uppercase">date_low</span>
+            <span class="font-bold text-gray-700 uppercase"
+              >52Low-Current in %</span
+            >
+            <span></span>
+          </li>
+          @for(control of best_for_today; track control.script){
+          <li
+            class="p-2 grid grid-cols-8 border-t border-gray-400 cursor-pointer hover:bg-gray-300 {{
+              $index % 2 == 0 ? 'bg-gray-200' : ''
+            }}"
+          >
+            <span class="text-gray-800 uppercase p-2">{{
+              control.script
+            }}</span>
+            <span class="text-gray-800 uppercase p-2">{{
+              control.current | number : "1.1-2"
+            }}</span>
+            <span class="text-gray-800 uppercase p-2">{{
+              control["5DMA"] | number : "1.1-2"
+            }}</span>
+            <span class="text-gray-800 uppercase p-2">{{
+              control["20DMA"] | number : "1.1-2"
+            }}</span>
+            <!-- <span>{{ control["50DMA"] | number : "1.1-2" }}</span>
+            <span>{{ control["100DMA"] | number : "1.1-2" }}</span> -->
+            <!-- <span>{{ control["200DMA"] | number : "1.1-2" }}</span> -->
+            <!-- <span class="text-gray-800 uppercase p-2">{{
+              control["52_high"] | number : "1.1-2"
+            }}</span>
+            <span class="text-gray-800 uppercase p-2">{{
+              control.date_high
+            }}</span> -->
+            <span class="text-gray-800 uppercase p-2">{{
+              control["52_low"] | number : "1.1-2"
+            }}</span>
+            <span class="text-gray-800 uppercase p-2">{{
+              control.date_low
+            }}</span>
+            <span class="text-gray-800 uppercase">{{
+              control.change_in_per | number : "1.1-2"
+            }}</span>
+            <button mat-fab color="primary" (click)="buyEtf(control)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </li>
+          }
+        </ul>
+      </mat-tab>
+      <mat-tab label="My Current Position" class="text-2xl">
+        <app-paper-trade></app-paper-trade>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

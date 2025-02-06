@@ -27,10 +27,12 @@ interface URL {
 })
 export class AppComponent {
   title = 'ng-algo-ui';
-  protected readonly fillerNav: URL[] = [];
+  protected readonly fillerNav: URL[] = [
+    { name: 'Home', url: '' },
+    { name: 'Tool Config', url: '/tool-config' },
+    { name: 'ETF', url: '/etf' },
+  ];
   constructor() {
-    this.fillerNav.push({ name: 'Home', url: '' });
-    this.fillerNav.push({ name: 'Tool Config', url: '/tool-config' });
     console.log(this.fillerNav);
   }
 }
