@@ -61,6 +61,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "src/proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "ng-algo-ui:build:production"
@@ -68,6 +71,7 @@
             "development": {
               "buildTarget": "ng-algo-ui:build:development"
             }
+            
           },
           "defaultConfiguration": "development"
         },

@@ -1,0 +1,7 @@
+@use '@angular/material' as mat;
+
+:root {
+    @include mat.fab-overrides((
+        foreground-color: orange,
+    ));
+  }
