@@ -31,6 +31,7 @@ export class AppComponent {
     { name: 'Home', url: '' },
     { name: 'Tool Config', url: '/tool-config' },
     { name: 'ETF', url: '/etf' },
+    { name: 'MACD STOCK Buy ', url: '/macd-stock-buy' },
   ];
   constructor() {
     console.log(this.fillerNav);
